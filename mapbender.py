@@ -18,6 +18,8 @@
 import math
 from math import sqrt
 import numpy as np
+import matplotlib
+matplotlib.use('GTK')
 import matplotlib.pyplot as plt
 from scipy import interpolate
 from itertools import tee, izip
@@ -283,7 +285,8 @@ def main(x,y,width,smoothing,subdiv):
     # create map with
     # python -c 'import logging; logging.basicConfig(level=logging.DEBUG); from landez import ImageExporter; ie = ImageExporter(tiles_url="http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png"); ie.export_image(bbox=(8.0419921875,51.25160146817652,10.074462890625,54.03681240523652), zoomlevel=14, imagepath="image.png")'
     im = Image.open("map.png")
-    bbox = [8.0419921875,51.25160146817652,10.074462890625,54.03681240523652]
+    #bbox = [8.0419921875,51.25160146817652,10.074462890625,54.03681240523652]
+    bbox = [-1.81549072265625,47.002733906678834,-0.1812744140625,47.67001142887409]
     # apply mercator projection
     bbox[1] = lat2y(bbox[1])
     bbox[3] = lat2y(bbox[3])
