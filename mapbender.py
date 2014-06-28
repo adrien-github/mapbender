@@ -28,6 +28,13 @@ from matplotlib.collections import PatchCollection
 import matplotlib
 from PIL import Image
 
+# Need landez library:
+# https://github.com/makinacorpus/landez
+
+import logging; 
+logging.basicConfig(level=logging.DEBUG)
+from landez import ImageExporter
+
 def y2lat(a):
     return 180.0/math.pi*(2.0*math.atan(math.exp(a*math.pi/180.0))-math.pi/2.0)
 
@@ -282,8 +289,6 @@ def main(x,y,width,smoothing,subdiv, imagepath, bbox, output):
     #    v = off+t[0]*h
     #    sx.append(u)
     #    sy.append(v)
-    # create map with
-    # python -c 'import logging; logging.basicConfig(level=logging.DEBUG); from landez import ImageExporter; ie = ImageExporter(tiles_url="http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png"); ie.export_image(bbox=(8.0419921875,51.25160146817652,10.074462890625,54.03681240523652), zoomlevel=14, imagepath="image.png")'
     im = Image.open(imagepath)
     # apply mercator projection
     bbox[1] = lat2y(bbox[1])
@@ -359,6 +364,10 @@ if __name__ == '__main__':
     width = float(sys.argv[2])
     smoothing = float(sys.argv[3])
     N = int(sys.argv[4])
+
+    ie = ImageExporter(tiles_url=url)
+    ie.export_image(bbox=bbox, zoomlevel=zoomlevel, imagepath=imagepath)
+
     main(x,y,width,smoothing,N, imagepath, bbox, output)
     #for smoothing in [1,2,4,8,12]:
     #    for subdiv in range(10,30):
