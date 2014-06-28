@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import ConfigParser
+import argparse
 import math
 from math import sqrt
 import numpy as np
@@ -344,6 +345,10 @@ if __name__ == '__main__':
     x = []
     y = []
 
+    parser = argparse.ArgumentParser(description="Generate a map ala Route Plus Finders")
+    parser.add_argument('-d', '--download', help="download the tiles. Use it if the tiles are not already downloaded.",  action="store_true")
+    args = parser.parse_args()
+    
    
     config = ConfigParser.ConfigParser()
     config.read('config.ini')
@@ -368,9 +373,10 @@ if __name__ == '__main__':
             x.append(float(a))
             y.append(b)
 
-    ie = ImageExporter(tiles_url=url)
-    ie.export_image(bbox=bbox, zoomlevel=zoomlevel, imagepath=imagepath)
-
+    if args.download:
+        ie = ImageExporter(tiles_url=url)
+        ie.export_image(bbox=bbox, zoomlevel=zoomlevel, imagepath=imagepath)
+        
     main(x,y,width,smoothing,N, imagepath, bbox_array, output)
     #for smoothing in [1,2,4,8,12]:
     #    for subdiv in range(10,30):
