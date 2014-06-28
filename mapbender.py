@@ -140,7 +140,7 @@ def get_st(Ax,Ay,Bx,By,Cx,Cy,Dx,Dy,Xx,Xy):
         t = [t[0],t[0]]
     return s, t
 
-def main(x,y,width,smoothing,subdiv):
+def main(x,y,width,smoothing,subdiv, imagepath, bbox, output):
     halfwidth = width/2.0
     tck,u = interpolate.splprep([x,y],s=smoothing)
     unew = np.linspace(0,1.0,subdiv+1)
@@ -284,9 +284,7 @@ def main(x,y,width,smoothing,subdiv):
     #    sy.append(v)
     # create map with
     # python -c 'import logging; logging.basicConfig(level=logging.DEBUG); from landez import ImageExporter; ie = ImageExporter(tiles_url="http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png"); ie.export_image(bbox=(8.0419921875,51.25160146817652,10.074462890625,54.03681240523652), zoomlevel=14, imagepath="image.png")'
-    im = Image.open("map.png")
-    #bbox = [8.0419921875,51.25160146817652,10.074462890625,54.03681240523652]
-    bbox = [-1.81549072265625,47.002733906678834,-0.1812744140625,47.67001142887409]
+    im = Image.open(imagepath)
     # apply mercator projection
     bbox[1] = lat2y(bbox[1])
     bbox[3] = lat2y(bbox[3])
@@ -318,7 +316,7 @@ def main(x,y,width,smoothing,subdiv):
         quad=(p0[0],p0[1],p1[0],p1[1],p2[0],p2[1],p3[0],p3[1])
         data.append((box,quad))
     im_out = im.transform((int(iw*width/(bbox[2]-bbox[0])),int(ih*height/(bbox[3]-bbox[1]))),Image.MESH,data,Image.BICUBIC)
-    im_out.save("out.png")
+    im_out.save(output)
     #np.random.seed(seed=0)
     #colors = 100*np.random.rand(len(patches)/2)+100*np.random.rand(len(patches)/2)
     #p = PatchCollection(patches, cmap=matplotlib.cm.jet, alpha=0.4)
@@ -361,7 +359,7 @@ if __name__ == '__main__':
     width = float(sys.argv[2])
     smoothing = float(sys.argv[3])
     N = int(sys.argv[4])
-    main(x,y,width,smoothing,N)
+    main(x,y,width,smoothing,N, imagepath, bbox, output)
     #for smoothing in [1,2,4,8,12]:
     #    for subdiv in range(10,30):
     #        if main(x,y,width,smoothing,subdiv):
