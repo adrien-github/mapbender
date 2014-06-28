@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import ConfigParser
 import math
 from math import sqrt
 import numpy as np
@@ -342,33 +343,35 @@ def main(x,y,width,smoothing,subdiv, imagepath, bbox, output):
 if __name__ == '__main__':
     x = []
     y = []
-    import sys
-    if len(sys.argv) != 5:
-        print "usage: %s data.csv width smoothing N"%sys.argv[0]
-        print ""
-        print " data.csv     whitespace delimited lon/lat pairs of points along the path"
-        print " width        width of the resulting map in degrees"
-        print " smoothing    curve smoothing from 0 (exact fit) to higher values (looser fit)"
-        print " N            amount of quads to split the path into"
-        print ""
-        print " example usage:"
-        print "              %s Weser-Radweg-Hauptroute.csv 0.286 6 20"%sys.argv[0]
-        exit(1)
-    with open(sys.argv[1]) as f:
+
+   
+    config = ConfigParser.ConfigParser()
+    config.read('config.ini')
+    
+    url = config.get('config', 'url')
+    bbox_array = [ float(item) for item in config.get('config', 'bbox').split(',') ]
+    bbox = tuple(item for item in bbox_array)
+    zoomlevel = int(config.get('config', 'zoomlevel'))
+    imagepath = config.get('config', 'imagepath')
+    
+    csv = config.get('config', 'csv')
+    width = float(config.get('config', 'width'))
+    smoothing = float(config.get('config', 'smoothing'))
+    N = int(config.get('config', 'N'))
+    output = config.get('config', 'output')
+
+    with open(csv) as f:
         for l in f:
             a,b = l.split()
             # apply mercator projection
             b = lat2y(float(b))
             x.append(float(a))
             y.append(b)
-    width = float(sys.argv[2])
-    smoothing = float(sys.argv[3])
-    N = int(sys.argv[4])
 
     ie = ImageExporter(tiles_url=url)
     ie.export_image(bbox=bbox, zoomlevel=zoomlevel, imagepath=imagepath)
 
-    main(x,y,width,smoothing,N, imagepath, bbox, output)
+    main(x,y,width,smoothing,N, imagepath, bbox_array, output)
     #for smoothing in [1,2,4,8,12]:
     #    for subdiv in range(10,30):
     #        if main(x,y,width,smoothing,subdiv):
