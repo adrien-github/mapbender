@@ -40,3 +40,8 @@ Now you may have a good map to travel :)
 The first author explain it on his blog:
 
 https://blog.mister-muffin.de/2014/04/03/mapbender---maps-for-long-distance-travels/
+
+# TODO
+
+- use directly the GPX track, so I don't have to export in CSV
+- calculate the bbox automatically from the track
