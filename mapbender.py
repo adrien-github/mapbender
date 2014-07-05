@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from xml.dom import minidom
 import ConfigParser
 import argparse
 import math
@@ -359,19 +360,21 @@ if __name__ == '__main__':
     zoomlevel = int(config.get('config', 'zoomlevel'))
     imagepath = config.get('config', 'imagepath')
     
-    csv = config.get('config', 'csv')
+    gpx = config.get('config', 'gpx')
     width = float(config.get('config', 'width'))
     smoothing = float(config.get('config', 'smoothing'))
     N = int(config.get('config', 'N'))
     output = config.get('config', 'output')
 
-    with open(csv) as f:
-        for l in f:
-            a,b = l.split()
-            # apply mercator projection
-            b = lat2y(float(b))
-            x.append(float(a))
-            y.append(b)
+
+    gpxfile = minidom.parse(gpx)
+    trkpt = gpxfile.getElementsByTagName('trkpt')
+    for point in trkpt:
+         lon = point.attributes['lon'].value
+         # apply mercator projection
+         lat = point.attributes['lat'].value
+         x.append(float(lon))
+         y.append(lat2y(float(lat)))
 
     if args.download:
         ie = ImageExporter(tiles_url=url)
