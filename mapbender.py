@@ -355,8 +355,7 @@ if __name__ == '__main__':
     config.read('config.ini')
     
     url = config.get('config', 'url')
-    bbox_array = [ float(item) for item in config.get('config', 'bbox').split(',') ]
-    bbox = tuple(item for item in bbox_array)
+
     zoomlevel = int(config.get('config', 'zoomlevel'))
     imagepath = config.get('config', 'imagepath')
     
@@ -365,17 +364,37 @@ if __name__ == '__main__':
     smoothing = float(config.get('config', 'smoothing'))
     N = int(config.get('config', 'N'))
     output = config.get('config', 'output')
-
+    
+    bbox_array = [0,0,0,0]
 
     gpxfile = minidom.parse(gpx)
     trkpt = gpxfile.getElementsByTagName('trkpt')
     for point in trkpt:
          lon = point.attributes['lon'].value
-         # apply mercator projection
          lat = point.attributes['lat'].value
+
+         # find bbox
+         if lon > bbox_array[0] or bbox_array[0] == 0:
+             bbox_array[0] = float(lon)
+         if lon < bbox_array[2] or bbox_array[2] == 0:
+             bbox_array[2] = float(lon)
+         if lat > bbox_array[1] or bbox_array[1] == 0:
+             bbox_array[1] = float(lat)
+         if lat < bbox_array[3] or bbox_array[3] == 0:
+             bbox_array[3] = float(lat)
+
+         # apply mercator projection
          x.append(float(lon))
          y.append(lat2y(float(lat)))
 
+    # I take a bbox a bit larger, just in case
+    bbox_array[0] = bbox_array[0] - 0.4
+    bbox_array[1] = bbox_array[1] - 0.4
+    bbox_array[2] = bbox_array[2] + 0.4
+    bbox_array[3] = bbox_array[3] + 0.4
+
+    bbox = tuple(item for item in bbox_array)
+    
     if args.download:
         ie = ImageExporter(tiles_url=url)
         ie.export_image(bbox=bbox, zoomlevel=zoomlevel, imagepath=imagepath)
