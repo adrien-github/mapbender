@@ -21,8 +21,6 @@ All the configuration is made in config.ini (a sample file is provided)
 I use this workflow to generate the map:
 
 - Create a GPX track, for instance with openrunner.com
-- export the GPX track using gpsbabel in CSV
-- modify the CSV: exchange the 2 columns, replace ',' by TAB
 - retrieve the bbox, for instance on openstreetmap.org (export)
 - modify the config.ini (bbox, filename, parameters)
 - launch the program. You need to use -d option the first time, to download the tiles.
@@ -43,5 +41,4 @@ https://blog.mister-muffin.de/2014/04/03/mapbender---maps-for-long-distance-trav
 
 # TODO
 
-- use directly the GPX track, so I don't have to export in CSV
 - calculate the bbox automatically from the track
