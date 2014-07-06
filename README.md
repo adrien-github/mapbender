@@ -21,8 +21,7 @@ All the configuration is made in config.ini (a sample file is provided)
 I use this workflow to generate the map:
 
 - Create a GPX track, for instance with openrunner.com
-- retrieve the bbox, for instance on openstreetmap.org (export)
-- modify the config.ini (bbox, filename, parameters)
+- modify the config.ini (filename, parameters)
 - launch the program. You need to use -d option the first time, to download the tiles.
 
   ./mapbender -d
@@ -38,7 +37,3 @@ Now you may have a good map to travel :)
 The first author explain it on his blog:
 
 https://blog.mister-muffin.de/2014/04/03/mapbender---maps-for-long-distance-travels/
-
-# TODO
-
-- calculate the bbox automatically from the track
